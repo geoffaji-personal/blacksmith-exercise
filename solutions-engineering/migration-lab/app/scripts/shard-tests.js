@@ -31,7 +31,8 @@ async function main() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const scale = Number(process.env.TEST_DURATION_SCALE || 0.15);
 
-  const tests = manifest.filter((_, idx) => idx % total === index - 1);
+  const sorted = [...manifest].sort((a, b) => b.durationMs - a.durationMs);
+  const tests = sorted.filter((_, idx) => idx % total === index - 1);
   const expectedDuration = tests.reduce((sum, test) => sum + test.durationMs, 0);
 
   console.log(`running unit test shard ${index}/${total}`);
